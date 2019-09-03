@@ -1,0 +1,101 @@
+===========================================================================================================================
+#Before going start we need to saprkcontext object with HiveContext
+===========================================================================================================================
+val sqlContext = new org.apache.spark.sql.hive.HiveContext(sc)
+===========================================================================================================================
+#After getting sqlContext object we can perform all the operation same as hive
+===========================================================================================================================
+#here we are creating hive table from sparksql
+===========================================================================================================================
+sqlContext.sql("CREATE TABLE IF NOT EXISTS employee(id INT, name STRING, age INT) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'")
+===========================================================================================================================
+#here we are loading the data from hdfs to hive table using sparksql
+===========================================================================================================================
+sqlContext.sql("LOAD DATA INPATH '/user/BigData/PySparkData/newlinedata.txt' INTO TABLE employee_sparksql");
+===========================================================================================================================
+#here are getting columns data from hive table using sparksql
+===========================================================================================================================
+val result = sqlContext.sql("FROM employee_sparksql SELECT id, name, age").show();
+===========================================================================================================================
+result.show();
+=============================================================================
+list all  databases from hive into spark_sql
+===========================================================================================================================
+val show_database = sqlContext.sql("show databases").show();
+===========================================================================================================================
+scala> val show_database = sqlContext.sql("show databases").show();
++-------------+
+| databaseName|
++-------------+
+|aiojanapril19|
+|       ccd_db|
+|      default|
+|           h7|
+|          hl7|
+|   mergepiddb|
+|      mongodb|
+|     sqoop_db|
++-------------+
+
+show_database: Unit = ()
+
+===========================================================================================================================
+Select databases from hive into sparksql
+===========================================================================================================================
+val use_databases =sqlContext.sql("use h7").show();
+===========================================================================================================================
+scala> val use_databases =sqlContext.sql("use h7").show();
+++
+||
+++
+++
+
+use_databases: Unit = ()
+
+===========================================================================================================================
+List all Table in sparksql from hive(show tables)
+===========================================================================================================================
+val list_table = sqlContext.sql("show tables").show();
+===========================================================================================================================
+scala> val list_table = sqlContext.sql("show tables").show();
++--------+--------------------+-----------+
+|database|           tableName|isTemporary|
++--------+--------------------+-----------+
+|      h7|                abc1|      false|
+|      h7|               abc11|      false|
+|      h7|              abc111|      false|
+|      h7|   ccda_pig_hive_cit|      false|
+|      h7|  ccda_pig_hive_cit1|      false|
+|      h7|ccda_pig_hive_cit...|      false|
+|      h7|ccda_pig_hive_cit...|      false|
+|      h7| cit_table_internal1|      false|
+|      h7|          citpig_tab|      false|
+|      h7|         citpig_tab1|      false|
+|      h7|   citpig_tab1_pigip|      false|
+|      h7|  citpig_tab1_pigip1|      false|
+|      h7|      cittemp_backup|      false|
+|      h7|          cittemphl7|      false|
+|      h7|            demo_hl7|      false|
+|      h7|          demography|      false|
+|      h7|         demography1|      false|
+|      h7| demography_distinct|      false|
+|      h7|      demography_es4|      false|
+|      h7|      demography_ess|      false|
++--------+--------------------+-----------+
+===========================================================================================================================
+#select table records using sparksql 
+===========================================================================================================================
+val records_table = sqlContext.sql("select * from demo_hl7 limit 10 ").show();
+===========================================================================================================================
+scala> val records_table = sqlContext.sql("select * from demo_hl7 limit 10 ").show();
++-----------+--------+-----------+------+--------------------+
+|  firstname|lastname|dateofbirth|gender|                 hrk|
++-----------+--------+-----------+------+--------------------+
+|      LAIRD|PATRICIA|   19560505|     F|LAIRDPATRICIA1956...|
+|   PETERSON|PATRICIA|   19620527|     F|PETERSONPATRICIA1...|
+|ALCHOUEFATI|   KAMIL|   19610501|     M|ALCHOUEFATIKAMIL1...|
++-----------+--------+-----------+------+--------------------+
+
+records_table: Unit = ()
+===========================================================================================================================
